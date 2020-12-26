@@ -1,21 +1,25 @@
 .sidebarRoot {
-  background-color: #434343;
-  width: 500px;
+  background-color: #1D1D1D;
   height: 100%;
   /* transform: translateX(0px); */
   transition: width 1s;
   display: flex;
   flex-direction: column;
   padding: 10px;
+  width: 150px;
+  position: absolute;
+  z-index: 1;
 }
 
-.sidebarClosed {
-  width: 150px;
+.sidebarOpen {
+  width: 500px;
+  position: absolute;
+  z-index: 1;
 }
 
 .sidebarOpenCloseButton {
   position: relative;
-  background-color:#434343;
+  background-color:#1D1D1D;
   border: 1px solid #141414;
   left: calc(100% - 10px);
   top: 10px;

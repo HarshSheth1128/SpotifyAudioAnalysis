@@ -37,7 +37,7 @@ function Application(props: any) {
   }
 
   if (selectedPlaylist.id !== '') {
-    return <Redirect to={`/app/playlist?playlistId=${selectedPlaylist!.id}`}/>
+    return <Redirect to={`/app/playlist?playlistName=${selectedPlaylist.name}&playlistId=${selectedPlaylist!.id}`}/>
   }
 
   return (

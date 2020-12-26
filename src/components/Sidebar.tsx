@@ -7,7 +7,7 @@ import { Typography } from 'antd';
 function Sidebar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const getSidebarName = () => (sidebarOpen) ? 'sidebarRoot': 'sidebarRoot sidebarClosed';
+  const getSidebarName = () => (sidebarOpen) ? 'sidebarRoot sidebarOpen': 'sidebarRoot';
   const openCloseSidebar = () => setSidebarOpen(!sidebarOpen);
   const getSidebarOpenButtonIcon = () => sidebarOpen ? arrowLeft: arrowRight;
 
