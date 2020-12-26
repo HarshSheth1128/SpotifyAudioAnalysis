@@ -1,0 +1,52 @@
+.pageContainer {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchForm {
+  width: 100%;
+  display: flex;
+}
+
+.searchBox {
+  background: #141414;
+  border: 1px solid #434343;
+  box-sizing: border-box;
+  border-radius: 2px;
+  display: flex;
+  max-height: 3vh;
+  min-width: 30vw;
+}
+
+.searchIcon {
+  height: 100%;
+  color: white;
+}
+
+.fa-search {
+  color: white;
+}
+
+.searchInput {
+  width: 90%;
+}
+
+.searchInput .ant-select {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.searchInput .ant-select .ant-select-selector {
+  /* border: none; */
+  border-color: none;
+  height: 100%;
+}
+
+.ant-select-focused {
+  border: none;
+}
