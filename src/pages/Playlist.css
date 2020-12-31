@@ -4,3 +4,16 @@
   height: 100vh;
   width: 100%;
 }
+
+.contentDiv {
+  margin-left: 75px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+
+.pageHeader {
+  background: #141414;
+  border-bottom: 3px solid #1f1f1f;
+}

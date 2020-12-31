@@ -8,6 +8,8 @@ import {find} from 'lodash';
 import {useAuth} from '../context/auth';
 import { Redirect } from 'react-router-dom';
 
+// Change this to use history
+
 interface Playlist{
   name: string;
   id: string;
@@ -37,7 +39,7 @@ function Application(props: any) {
   }
 
   if (selectedPlaylist.id !== '') {
-    return <Redirect to={`/app/playlist?playlistName=${selectedPlaylist.name}&playlistId=${selectedPlaylist!.id}`}/>
+    return <Redirect to={`/app/playlist/bar?playlistName=${selectedPlaylist.name}&playlistId=${selectedPlaylist!.id}`}/>
   }
 
   return (

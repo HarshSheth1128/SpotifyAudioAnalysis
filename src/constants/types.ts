@@ -1,4 +1,5 @@
 export enum ChartTypes {
-  ChartGraph,
-  BarGraph
+  None = "none",
+  BarGraph = "bar",
+  ScatterGraph = "scatter"
 }

@@ -1,11 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {getTracksForPlaylist, getAudioFeaturesForTracks} from '../api';
 import { useCookies } from 'react-cookie';
 import { BarChart, Legend, CartesianGrid, XAxis, YAxis, Tooltip, Bar} from 'recharts';
 import "./BarGraph.css";
 import {isEmpty, round, truncate} from 'lodash';
 import CustomizedAxisTick from '../components/CustomizedTick';
-import { Typography, Checkbox, Radio} from 'antd';
+import { Typography, Checkbox, Radio, Pagination} from 'antd';
+import { isConstructorDeclaration } from 'typescript';
+import { useGetAudioFeaturesForTracks, useGetGraphDataFromRawData, useGetTracksForPlaylist } from '../common/api';
 
 interface GraphData {
   name?: string;
@@ -24,9 +26,28 @@ enum GraphFeatures {
   loudness = 'loudness',
 }
 
+enum RadioSortByOptions {
+  none = 'none',
+  danceability = 'danceability',
+  energy = 'energy',
+  valence = 'valence',
+  tempo = 'tempo',
+  loudness = 'loudness',
+}
+
 enum SortOrder {
   ascending = 'ascending',
   descending = 'descending',
+}
+
+interface AudioAnalysis {
+  [key:string]: {
+    danceability: number;
+    energy: number;
+    valence: number;
+    tempo: number;
+    loudness: number;
+  }
 }
 
 export function BarGraph() {
@@ -34,126 +55,103 @@ export function BarGraph() {
   const playlistId = search.match(/playlistId=(.*)/)![1];
   const playlistName = search.match(/playlistName=(.*)&/)![1];
   const [activeFeatures, setActiveFeatures] = useState({
-    danceability: false,
+    danceability: true,
     energy: false,
     valence: false,
     tempo: false,
     loudness: false
   })
-  const [sortBy, setSortBy] = useState<GraphFeatures | 'none'>('none');
-  const [cookies] = useCookies(['Authorization']);
-  const [tracks, setTracks] = useState([]);
-  const [audioAnalysis, setAudioAnalysis] = useState<{
-    [key:string]: {
-      danceability: number;
-      energy: number;
-      valence: number;
-      tempo: number;
-      loudness: number;
-    }
-  }>({});
-  const [graphData, setGraphData] = useState<GraphData[]>([]);
+  const [sortBy, setSortBy] = useState<RadioSortByOptions>(RadioSortByOptions.none);
+  
+  
   const [paginatedData, setPaginatedData] = useState<GraphData[]>([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 30;
+  const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.descending);
 
-  useEffect(() => {
-    getTracksForPlaylist(playlistId, cookies).then((res) => {
-      setTracks(res.data.items);
-    });
-  }, [playlistId, cookies]);
-
-  useEffect(()=> {
-    if (isEmpty(tracks)) return;
-    const queryString = tracks.map((trackObj: {track: {id:string}})=> trackObj.track.id).join(',');
-    getAudioFeaturesForTracks(queryString, cookies).then((res)=> {
-      const audioFeatures = res.data.audio_features;
-      const audioFeatureObjects = audioFeatures
-        .map((audioFeature: {id: string})=> {return {[audioFeature.id]: audioFeature}})
-        .reduce((acc: any, obj: any) => {return {...acc, ...obj}}, {});
-      setAudioAnalysis(audioFeatureObjects);
-    });
-  }, [tracks, cookies]);
-
-  useEffect(() => {
-    if (isEmpty(tracks) || isEmpty(audioAnalysis)) return;
-    console.log(tracks);
-    console.log(audioAnalysis);
-    let graphData = tracks
-      .map((trackObj: {track: {id: string, name:string}}) => {
-        console.log(trackObj);
-        return {
-          name: truncate(trackObj.track.name, {length: 18}),
-          danceability: audioAnalysis[trackObj.track.id].danceability,
-          energy: audioAnalysis[trackObj.track.id].energy,
-          valence: audioAnalysis[trackObj.track.id].valence,
-          tempo: audioAnalysis[trackObj.track.id].tempo,
-          loudness: round((audioAnalysis[trackObj.track.id].loudness + 60) / 60, 3)
-        }
-      });
-    setGraphData(graphData);
-    setPaginatedData(graphData.slice(0, 20));
-  }, [tracks, audioAnalysis])
-
-  useEffect(() => {
+  const sortData = useCallback((graphData: GraphData[]): GraphData[] => {
+    // console.log(sortBy);
+    if (sortBy === RadioSortByOptions.none) return graphData;
     console.log(sortBy);
-    if (sortBy !== 'none') {
-      setGraphData(graphData.sort((a, b) => a[sortBy]! - b[sortBy]! ));
-      setPaginatedData(graphData.slice(0, 20));
+
+    if (sortOrder === SortOrder.descending) {
+      return graphData.sort((a, b) => a[sortBy]! - b[sortBy]!);
+    } else {
+      return graphData.sort((a, b) => b[sortBy]! - a[sortBy]!);
     }
-  }, [sortBy, graphData]);
+    
+    
+  }, [sortBy, sortOrder]);
 
-  const toggleFeature = (feature: "danceability" | "energy" | "valence" | "tempo" | "loudness") => [
-    setActiveFeatures({...activeFeatures, [feature]: !activeFeatures[feature]})
-  ]
+  const paginateData = useCallback((graphData: GraphData[]): GraphData[] => {
+    return graphData.slice(
+      (page - 1) * 30,
+      ((page - 1) * 30) + 30
+    );
+  }, [page]);
 
-  console.log(activeFeatures);
+  // Get the graph data from raw data
+  const [graphData, setGraphData] = useGetGraphDataFromRawData(playlistId);
+ 
+  // Sort and paginate data on radio change
+  useEffect(() => {
+    const sortedData = sortData(graphData);
+    setGraphData(sortedData);
+    setPaginatedData(paginateData(sortedData));
+  }, [sortBy, sortOrder, graphData, sortData, paginateData, setGraphData]);
+
+
   return (
     <div className="pageRoot">
       <div className="graphContainer">
         <div className="graph">
-
+          <Typography.Title className="playlistTitle">{`Playlist analysis for ${playlistName}`}</Typography.Title>
+          <BarChart barCategoryGap={'15%'} className="barChart" layout="vertical" width={730} height={1100} data={paginatedData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis type="number" />
+            {/* @ts-expect-error */}
+            <YAxis tick={<CustomizedAxisTick/>}type="category" width={100} interval={0} dataKey="name" />
+            <Tooltip />
+            <Legend />
+            {activeFeatures.danceability && <Bar dataKey="danceability" fill="#8884d8" />}
+            {activeFeatures.energy && <Bar dataKey="energy" fill="#84d89d" />}
+            {activeFeatures.valence && <Bar dataKey="valence" fill="#bd84d8" />}
+            {activeFeatures.tempo && <Bar dataKey="tempo" fill="#d88492" />}
+            {activeFeatures.loudness && <Bar dataKey="loudness" fill="#d8d284" />}
+          </BarChart>
         </div>
-        <Typography.Title className="playlistTitle">{`Playlist analysis for ${playlistName}`}</Typography.Title>
-        <BarChart barCategoryGap={'15%'} className="barChart" layout="vertical" width={730} height={1200} data={paginatedData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" />
-          {/* @ts-expect-error */}
-          <YAxis tick={<CustomizedAxisTick/>}type="category" width={100} interval={0} dataKey="name" />
-          <Tooltip />
-          <Legend />
-          {activeFeatures.danceability && <Bar dataKey="danceability" fill="#8884d8" />}
-          {activeFeatures.energy && <Bar dataKey="energy" fill="#84d89d" />}
-          {activeFeatures.valence && <Bar dataKey="valence" fill="#bd84d8" />}
-          {activeFeatures.tempo && <Bar dataKey="tempo" fill="#d88492" />}
-          {activeFeatures.loudness && <Bar dataKey="loudness" fill="#d8d284" />}
-        </BarChart>
+
+        <div className="paginateContainer">
+          <Typography.Text style={{fontSize: '1rem', fontWeight: 'bold'}}>Pagination</Typography.Text>
+          <Pagination simple onChange={(page) => setPage(page)} current={page} pageSize={itemsPerPage} total={graphData.length} />
+        </div>
       </div>
       <div className="settingsContainer">
         <div className="checkboxContainer">
           <Typography.Text style={{fontSize: '1rem', fontWeight: 'bold'}}>Features</Typography.Text>
-          <div><Checkbox onChange={() => toggleFeature('danceability')}/><span className="graphCheckboxText">Danceability</span></div>
-          <div><Checkbox onChange={() => toggleFeature('energy')}/><span className="graphCheckboxText">Energy</span></div>
-          <div><Checkbox onChange={() => toggleFeature('valence')}/><span className="graphCheckboxText">Valence</span></div>
-          <div><Checkbox onChange={() => toggleFeature('tempo')}/><span className="graphCheckboxText">Tempo</span></div>
-          <div><Checkbox onChange={() => toggleFeature('loudness')}/><span className="graphCheckboxText">Loudness</span></div>
+          <div><Checkbox checked={activeFeatures.danceability} onChange={() => toggleFeature('danceability')}/><span className="graphCheckboxText">Danceability</span></div>
+          <div><Checkbox checked={activeFeatures.energy} onChange={() => toggleFeature('energy')}/><span className="graphCheckboxText">Energy</span></div>
+          <div><Checkbox checked={activeFeatures.valence} onChange={() => toggleFeature('valence')}/><span className="graphCheckboxText">Valence</span></div>
+          <div><Checkbox checked={activeFeatures.tempo} onChange={() => toggleFeature('tempo')}/><span className="graphCheckboxText">Tempo</span></div>
+          <div><Checkbox checked={activeFeatures.loudness} onChange={() => toggleFeature('loudness')}/><span className="graphCheckboxText">Loudness</span></div>
         </div>
         <div className="sortContainer">
           <Typography.Text style={{fontSize: '1rem', fontWeight: 'bold'}}>Sort By</Typography.Text>
-          <Radio.Group style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
-            <Radio value={1} onChange={() => setSortBy('none')}><span className="graphCheckboxText">None</span></Radio>
-            <Radio value={2} disabled={!activeFeatures.danceability} onChange={() => setSortBy(GraphFeatures.danceability)}><span className="graphCheckboxText">Danceability</span></Radio>
-            <Radio value={3} disabled={!activeFeatures.energy} onChange={() => setSortBy(GraphFeatures.energy)}><span className="graphCheckboxText">Energy</span></Radio>
-            <Radio value={4} disabled={!activeFeatures.valence} onChange={() => setSortBy(GraphFeatures.valence)}><span className="graphCheckboxText">Valence</span></Radio>
-            <Radio value={5} disabled={!activeFeatures.tempo} onChange={() => setSortBy(GraphFeatures.tempo)}><span className="graphCheckboxText">Tempo</span></Radio>
-            <Radio value={6} disabled={!activeFeatures.loudness} onChange={() => setSortBy(GraphFeatures.loudness)}><span className="graphCheckboxText">Loudness</span></Radio>
+          <Radio.Group value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
+            <Radio value={RadioSortByOptions.none} ><span className="graphCheckboxText">None</span></Radio>
+            <Radio value={RadioSortByOptions.danceability} disabled={!activeFeatures.danceability}><span className="graphCheckboxText">Danceability</span></Radio>
+            <Radio value={RadioSortByOptions.energy} disabled={!activeFeatures.energy}><span className="graphCheckboxText">Energy</span></Radio>
+            <Radio value={RadioSortByOptions.valence} disabled={!activeFeatures.valence}><span className="graphCheckboxText">Valence</span></Radio>
+            <Radio value={RadioSortByOptions.tempo} disabled={!activeFeatures.tempo}><span className="graphCheckboxText">Tempo</span></Radio>
+            <Radio value={RadioSortByOptions.loudness} disabled={!activeFeatures.loudness}><span className="graphCheckboxText">Loudness</span></Radio>
           </Radio.Group>
         </div>
 
         <div className="sortContainer">
           <Typography.Text style={{fontSize: '1rem', fontWeight: 'bold'}}>Sort Order</Typography.Text>
-          <Radio.Group style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
-            <Radio value={1} onChange={() => setSortBy('none')}><span className="graphCheckboxText">Ascending</span></Radio>
-            <Radio value={2} disabled={!activeFeatures.danceability} onChange={() => setSortBy(GraphFeatures.danceability)}><span className="graphCheckboxText">Descending</span></Radio>
+          <Radio.Group value={sortOrder} onChange={(e)=> setSortOrder(e.target.value)} style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
+            <Radio value={SortOrder.ascending} disabled={sortBy === RadioSortByOptions.none} ><span className="graphCheckboxText">Ascending</span></Radio>
+            <Radio value={SortOrder.descending} disabled={sortBy === RadioSortByOptions.none} ><span className="graphCheckboxText">Descending</span></Radio>
           </Radio.Group>
         </div>
 
@@ -161,6 +159,12 @@ export function BarGraph() {
       
     </div>
   );
+
+ 
+
+ function toggleFeature(feature: "danceability" | "energy" | "valence" | "tempo" | "loudness") {
+  setActiveFeatures({...activeFeatures, [feature]: !activeFeatures[feature]})
+ }
 }
 
 export default BarGraph;

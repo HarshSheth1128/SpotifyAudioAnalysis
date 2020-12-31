@@ -1,19 +1,17 @@
 import React from 'react';
 import {ChartTypes} from '../constants/types';
 import BarGraph from '../pages/BarGraph';
+import ScatterGraph from '../pages/ScatterGraph';
 import './GraphContent.css';
 
-function GraphContent({setChartType, chartType}: 
-  {
-    setChartType: React.Dispatch<React.SetStateAction<ChartTypes>>, 
-    chartType: ChartTypes;
-  }
-) {
+function GraphContent({chartType}: {chartType: ChartTypes}) {
 
   const renderGraph = (chartType: ChartTypes) => {
     switch(chartType) {
       case ChartTypes.BarGraph:
         return <BarGraph/>
+      case ChartTypes.ScatterGraph:
+        return <ScatterGraph/>
     }
   }
 

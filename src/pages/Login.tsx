@@ -7,7 +7,7 @@ import axios from 'axios';
 function Login() { 
   const [isError, setIsError] = useState(false);
   const {isAuth, setIsAuth} = useAuth();
-  const [,setCookie] = useCookies(['Authorization']);
+  const [,setCookie] = useCookies(['Authorization', 'Refresh']);
   const [code, setCode] = useState('');
 
   useEffect(()=> {
@@ -22,14 +22,16 @@ function Login() {
       axios.post('https://accounts.spotify.com/api/token', params, { headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }}).then((res)=> {
-        setIsAuth(true);
         setCookie('Authorization', res.data.access_token);
+        setCookie('Refresh', res.data.refresh_token);
+        setIsAuth(true);
         setCode('');
       });
     }
   }, [code, isAuth, setCookie, setIsAuth])
 
   if (isAuth) {
+    localStorage.setItem('isAuth', JSON.stringify(true));
     return <Redirect to="/app/search"/>
   }
 

@@ -25,6 +25,7 @@
   align-items: flex-start;
   height: 100%;
   width: 100%;
+  padding: 15px;
 }
 
 .checkboxContainer {
@@ -32,10 +33,9 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 10px;
-  padding-right: 20px;
   align-self: flex-end;
   background-color: #1D1D1D;
-  margin: 20px;
+  width: 100%;
 }
 
 .graphCheckboxText {
@@ -49,6 +49,16 @@
   padding: 10px;
   background-color: #1D1D1D;
   align-self: flex-end;
-  margin: 20px;
+  margin-top: 20px;
   padding-right: 20px;
+  width: 100%;
+}
+
+.paginateContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+  background-color: #1D1D1D;
+  align-self: flex-end;
 }
