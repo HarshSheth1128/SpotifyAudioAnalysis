@@ -12,22 +12,30 @@ import {
   BarChartOutlined,
   PaperClipOutlined,
   GiftOutlined,
-  UserOutlined
+  UserOutlined,
+  DotChartOutlined,
+  InfoCircleOutlined
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { useHistory } from 'react-router-dom';
 import { toInteger } from 'lodash';
 import { useGetUserObject } from '../common/api';
+import {ContentTypes} from '../constants/types';
+
 
 enum MenuItems {
-  Search,
-  BarChart,
-  ScatterChart,
-  Report,
-  Extras
+  Search = "Search",
+  BarChart = "BarChart",
+  ScatterChart = "ScatterChart",
+  Report = "Report",
+  Extras = "Extras",
+  Info = "Info"
 }
 
-function Sidebar() {
+function Sidebar({contentType, setContentType}: {
+    contentType: ContentTypes, 
+    setContentType: React.Dispatch<React.SetStateAction<ContentTypes>>
+  }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const userObject = useGetUserObject();
   const history = useHistory();
@@ -36,15 +44,19 @@ function Sidebar() {
   const hasImage = () => (userObject.images && userObject.images.length > 0);
 
   const handleMenuClick = (item: React.Key) => {
-    const changedItem = toInteger(item) as unknown as MenuItems;
+    const changedItem = item as ContentTypes;
     const search = window.location.search;
-    switch(changedItem) {
-      case MenuItems.Search:
-        return history.push('/app/search');
-      case MenuItems.BarChart:
-        return history.push(`/app/playlist/bar${search}`)
-      case MenuItems.ScatterChart:
-        return history.push(`/app/playlist/scatter${search}`)
+    setContentType(changedItem);
+    if (changedItem === ContentTypes.Search) {
+      return history.push(`/app/search`)
+    } else if (changedItem === ContentTypes.BarGraph){
+      return history.push(`/app/playlist/bar${search}`)
+    } else if (changedItem === ContentTypes.ScatterGraph){
+      return history.push(`/app/playlist/scatter${search}`)
+    } else if (changedItem === ContentTypes.Report) {
+      return history.push(`/app/playlist/report${search}`)
+    } else if (changedItem === ContentTypes.Info) {
+      return history.push(`/app/playlist/info${search}`)
     }
   }
 
@@ -59,23 +71,20 @@ function Sidebar() {
           {React.createElement(!sidebarOpen ? MenuUnfoldOutlined : MenuFoldOutlined)}
       </Button>
       <Menu
+        selectedKeys={[contentType]}
         inlineCollapsed={!sidebarOpen}
         className="sidebarMenu"
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={[MenuItems.BarChart.toString()]}
+        defaultSelectedKeys={[MenuItems.Report.toString()]}
         onClick={(e)=>handleMenuClick(e.key)}
       >
-        <SubMenu title="Charts" icon={<BarChartOutlined />}>
-          <Menu.Item key={MenuItems.BarChart}>Bar Chart</Menu.Item>
-          <Menu.Item key={MenuItems.ScatterChart}>Scatter Chart</Menu.Item>
-        </SubMenu>
-        <Menu.Item key={MenuItems.Report} icon={<PaperClipOutlined />}>
-          Report
-        </Menu.Item>
-        <Menu.Item key={MenuItems.Extras} icon={<GiftOutlined />}>
-          Extras
-        </Menu.Item>
+        <Menu.Item key={ContentTypes.Search} icon={<SearchOutlined />}>Search</Menu.Item>
+        <Menu.Item key={ContentTypes.Report} icon={<PaperClipOutlined />}>Report</Menu.Item>
+        <Menu.Item icon={<BarChartOutlined />} key={ContentTypes.BarGraph}>Bar Chart</Menu.Item>
+        <Menu.Item icon={<DotChartOutlined />} key={ContentTypes.ScatterGraph}>Scatter Chart</Menu.Item>
+        <Menu.Item icon={<InfoCircleOutlined />} key={ContentTypes.Info}>Info</Menu.Item>
+        
       </Menu>
     </div>
   );

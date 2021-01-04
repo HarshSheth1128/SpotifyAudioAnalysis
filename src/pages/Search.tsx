@@ -2,18 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import './Search.css';
 import searchSolid from '../icons/search-solid.svg';
-import {Input, AutoComplete, Button, Typography} from 'antd';
+import {Input, AutoComplete, Button, Typography, Tag} from 'antd';
 import { getPlaylists } from '../api';
 import {find} from 'lodash';
 import {useAuth} from '../context/auth';
 import { Redirect } from 'react-router-dom';
+import { Playlist } from '../constants/types';
 
 // Change this to use history
 
-interface Playlist{
-  name: string;
-  id: string;
-}
+
 
 function Application(props: any) { 
   const [cookies] = useCookies(['Authorization']);
@@ -39,7 +37,7 @@ function Application(props: any) {
   }
 
   if (selectedPlaylist.id !== '') {
-    return <Redirect to={`/app/playlist/bar?playlistName=${selectedPlaylist.name}&playlistId=${selectedPlaylist!.id}`}/>
+    return <Redirect to={`/app/playlist/report?playlistName=${selectedPlaylist.name}&playlistId=${selectedPlaylist!.id}`}/>
   }
 
   return (

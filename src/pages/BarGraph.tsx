@@ -1,6 +1,4 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {getTracksForPlaylist, getAudioFeaturesForTracks} from '../api';
-import { useCookies } from 'react-cookie';
 import { BarChart, Legend, CartesianGrid, XAxis, YAxis, Tooltip, Bar} from 'recharts';
 import "./BarGraph.css";
 import {isEmpty, round, truncate} from 'lodash';
@@ -8,23 +6,10 @@ import CustomizedAxisTick from '../components/CustomizedTick';
 import { Typography, Checkbox, Radio, Pagination} from 'antd';
 import { isConstructorDeclaration } from 'typescript';
 import { useGetAudioFeaturesForTracks, useGetGraphDataFromRawData, useGetTracksForPlaylist } from '../common/api';
+import { GraphData } from '../constants/types';
+import decodeUriComponent from 'decode-uri-component';
 
-interface GraphData {
-  name?: string;
-  danceability?: number;
-  energy?: number;
-  valence?: number;
-  tempo?: number;
-  loudness?: number;
-}
 
-enum GraphFeatures {
-  danceability = 'danceability',
-  energy = 'energy',
-  valence = 'valence',
-  tempo = 'tempo',
-  loudness = 'loudness',
-}
 
 enum RadioSortByOptions {
   none = 'none',
@@ -40,20 +25,12 @@ enum SortOrder {
   descending = 'descending',
 }
 
-interface AudioAnalysis {
-  [key:string]: {
-    danceability: number;
-    energy: number;
-    valence: number;
-    tempo: number;
-    loudness: number;
-  }
-}
+
 
 export function BarGraph() {
   const search = window.location.search;
   const playlistId = search.match(/playlistId=(.*)/)![1];
-  const playlistName = search.match(/playlistName=(.*)&/)![1];
+  const playlistName = decodeUriComponent(search.match(/playlistName=(.*)&/)![1]);
   const [activeFeatures, setActiveFeatures] = useState({
     danceability: true,
     energy: false,
@@ -102,10 +79,9 @@ export function BarGraph() {
 
 
   return (
-    <div className="pageRoot">
-      <div className="graphContainer">
+    <div className="pageRootBar">
+      <div className="graphContainerBar">
         <div className="graph">
-          <Typography.Title className="playlistTitle">{`Playlist analysis for ${playlistName}`}</Typography.Title>
           <BarChart barCategoryGap={'15%'} className="barChart" layout="vertical" width={730} height={1100} data={paginatedData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" />
@@ -126,7 +102,7 @@ export function BarGraph() {
           <Pagination simple onChange={(page) => setPage(page)} current={page} pageSize={itemsPerPage} total={graphData.length} />
         </div>
       </div>
-      <div className="settingsContainer">
+      <div className="settingsContainerBar">
         <div className="checkboxContainer">
           <Typography.Text style={{fontSize: '1rem', fontWeight: 'bold'}}>Features</Typography.Text>
           <div><Checkbox checked={activeFeatures.danceability} onChange={() => toggleFeature('danceability')}/><span className="graphCheckboxText">Danceability</span></div>

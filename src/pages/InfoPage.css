@@ -1,0 +1,24 @@
+.infoPageRoot {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow-y: scroll;
+  background-color: #141414;
+}
+
+.cardContainer {
+  margin: 20px;
+  margin-top: 0px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.card {
+  margin-top: 30px;
+}
+
+.subCard {
+  margin-top: 10px;
+}

@@ -1,0 +1,77 @@
+
+.reportRoot {
+  display:flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #141414;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.headerTitleContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.header {
+  margin: 20px;
+}
+
+.playlistCoverImage {
+  height: 100px;
+  width: 100px;
+}
+
+.headerTextContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-left: 10px;
+  align-items: flex-start;
+}
+
+.headerTitle {
+  font-size: 32px;
+}
+
+.headerSubtitle {
+  font-size: 16px;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+  background-color: #1f1f1f;
+  padding: 20px;
+}
+
+.radarChart {
+  display: flex;
+  justify-content: center;
+  background-color: #1f1f1f;
+}
+
+.radarTitle {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.radarInfo {
+  padding: 20px;
+  display: flex;
+  justify-content: space-around;
+  background-color: #1f1f1f;
+}
+
+.trackList {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  height: 30%;
+  overflow-x: scroll;
+  background-color: #1f1f1f;
+  padding: 20px 10px 20px 10px;
+}

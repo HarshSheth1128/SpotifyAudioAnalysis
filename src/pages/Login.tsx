@@ -22,8 +22,10 @@ function Login() {
       axios.post('https://accounts.spotify.com/api/token', params, { headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }}).then((res)=> {
-        setCookie('Authorization', res.data.access_token);
-        setCookie('Refresh', res.data.refresh_token);
+        // setCookie('Authorization', res.data.access_token);
+        // setCookie('Refresh', res.data.refresh_token);
+        localStorage.setItem('Authorization', res.data.access_token);
+        localStorage.setItem('Refresh', res.data.refresh_token);
         setIsAuth(true);
         setCode('');
       });

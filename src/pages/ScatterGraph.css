@@ -1,0 +1,65 @@
+.pageRoot {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+  background-color: #1D1D1D;
+}
+
+.graphContainer {
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  width: 100%;
+}
+
+.settingsContainer {
+  display: flex;
+  flex-direction: row;
+  background-color: #262626;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.dropdownLabelContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.xAxisFeature {
+  min-width: 100px;
+}
+
+.graph {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  margin-right: 20px;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.selectedPlaylists {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.selectedPlaylistCheckbox {
+  margin-left: 0;
+}
+
+.formContainer {
+  width: 50%;
+}
+
+.selectedPlaylists {
+  margin: 20px;
+  min-width: 10%;
+}
