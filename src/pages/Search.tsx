@@ -54,8 +54,8 @@ function Application(props: any) {
                   options={getDropdownPlaylists()}
                 />
               </Input.Group>
-
               <Button htmlType="submit"><img className="searchIcon" alt="searchIcon" src={searchSolid}></img></Button>
+
 
           </form>
         </div>

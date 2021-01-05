@@ -24,10 +24,10 @@ axios.interceptors.response.use(
       }}).then((res)=> {
         localStorage.setItem('Authorization', res.data.access_token);
         localStorage.setItem('Refresh', res.data.refresh_token);
+      }).then(()=> {
+        window.location.reload();
       });
-      
-      
-      // window.location = 'localhost:3000' as unknown as Location
+          
     }
   }
 )

@@ -81,8 +81,8 @@ export function BarGraph() {
   return (
     <div className="pageRootBar">
       <div className="graphContainerBar">
-        <div className="graph">
-          <BarChart barCategoryGap={'15%'} className="barChart" layout="vertical" width={730} height={1100} data={paginatedData}>
+        <div className="barGraph">
+          <BarChart barCategoryGap={'15%'} layout="vertical" width={730} height={1100} data={paginatedData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" />
             {/* @ts-expect-error */}

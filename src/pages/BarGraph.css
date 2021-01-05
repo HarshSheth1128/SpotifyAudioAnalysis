@@ -1,14 +1,11 @@
 .pageRootBar {
+  padding-top: 20px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  height: 100%;
   background-color: #141414;
-}
-
-.barChart {
-  height: 1000px;
+  padding-bottom: 20px;
 }
 
 .graphContainerBar {
@@ -19,6 +16,11 @@
   justify-content: center;
 }
 
+.barGraph {
+  display: flex;
+  height: 100%;
+}
+
 .settingsContainerBar {
   display: flex;
   flex-direction: column;
@@ -27,6 +29,7 @@
   height: 100%;
   width: 100%;
   padding: 15px;
+  padding-top: 5px;
 }
 
 .checkboxContainer {

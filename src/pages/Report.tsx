@@ -81,7 +81,7 @@ function Report() {
           <Typography.Title className="radarTitle" level={5}>Tracklist</Typography.Title>
           <div className="trackList">
             {playlist.tracks.items.map((track: TrackObject, index: number) => (
-              <Typography.Text>{index+1}. {truncate(track.track.name, {length: 20})}</Typography.Text>
+              <Typography.Text style={{marginRight: 20}}>{index+1}. {truncate(track.track.name, {length: 20})}</Typography.Text>
             ))}
           </div>
     </div>

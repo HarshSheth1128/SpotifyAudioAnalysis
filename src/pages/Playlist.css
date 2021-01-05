@@ -11,6 +11,8 @@
   display: flex;
   flex-direction: column;
   height: auto;
+  overflow-y: scroll;
+  background-color: #141414;
 }
 
 .pageHeader {

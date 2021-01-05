@@ -38,3 +38,15 @@
     transform: rotate(360deg);
   }
 }
+
+#root {
+  height: 100%;
+}
+
+.html {
+  height: 100%;
+}
+
+.App {
+  height: 100%;
+}
