@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/SpotifyAudioAnalysis/static/css/main.96e488e7.chunk.css",
-    "main.js": "/SpotifyAudioAnalysis/static/js/main.396458d3.chunk.js",
-    "main.js.map": "/SpotifyAudioAnalysis/static/js/main.396458d3.chunk.js.map",
+    "main.js": "/SpotifyAudioAnalysis/static/js/main.b73d7349.chunk.js",
+    "main.js.map": "/SpotifyAudioAnalysis/static/js/main.b73d7349.chunk.js.map",
     "runtime-main.js": "/SpotifyAudioAnalysis/static/js/runtime-main.6f48544e.js",
     "runtime-main.js.map": "/SpotifyAudioAnalysis/static/js/runtime-main.6f48544e.js.map",
     "static/css/2.5ce1793d.chunk.css": "/SpotifyAudioAnalysis/static/css/2.5ce1793d.chunk.css",
-    "static/js/2.908738b8.chunk.js": "/SpotifyAudioAnalysis/static/js/2.908738b8.chunk.js",
-    "static/js/2.908738b8.chunk.js.map": "/SpotifyAudioAnalysis/static/js/2.908738b8.chunk.js.map",
+    "static/js/2.929b318f.chunk.js": "/SpotifyAudioAnalysis/static/js/2.929b318f.chunk.js",
+    "static/js/2.929b318f.chunk.js.map": "/SpotifyAudioAnalysis/static/js/2.929b318f.chunk.js.map",
     "static/js/3.39c71001.chunk.js": "/SpotifyAudioAnalysis/static/js/3.39c71001.chunk.js",
     "static/js/3.39c71001.chunk.js.map": "/SpotifyAudioAnalysis/static/js/3.39c71001.chunk.js.map",
     "index.html": "/SpotifyAudioAnalysis/index.html",
     "static/css/2.5ce1793d.chunk.css.map": "/SpotifyAudioAnalysis/static/css/2.5ce1793d.chunk.css.map",
     "static/css/main.96e488e7.chunk.css.map": "/SpotifyAudioAnalysis/static/css/main.96e488e7.chunk.css.map",
-    "static/js/2.908738b8.chunk.js.LICENSE.txt": "/SpotifyAudioAnalysis/static/js/2.908738b8.chunk.js.LICENSE.txt",
+    "static/js/2.929b318f.chunk.js.LICENSE.txt": "/SpotifyAudioAnalysis/static/js/2.929b318f.chunk.js.LICENSE.txt",
     "static/media/barGraph.623f29bb.png": "/SpotifyAudioAnalysis/static/media/barGraph.623f29bb.png",
     "static/media/collage.049726ee.jpg": "/SpotifyAudioAnalysis/static/media/collage.049726ee.jpg",
     "static/media/report.e080a35d.png": "/SpotifyAudioAnalysis/static/media/report.e080a35d.png",
@@ -23,8 +23,8 @@
   "entrypoints": [
     "static/js/runtime-main.6f48544e.js",
     "static/css/2.5ce1793d.chunk.css",
-    "static/js/2.908738b8.chunk.js",
+    "static/js/2.929b318f.chunk.js",
     "static/css/main.96e488e7.chunk.css",
-    "static/js/main.396458d3.chunk.js"
+    "static/js/main.b73d7349.chunk.js"
   ]
 }
