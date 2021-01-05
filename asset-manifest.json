@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/trumendous-tracks/static/css/main.96e488e7.chunk.css",
+    "main.js": "/trumendous-tracks/static/js/main.9c835259.chunk.js",
+    "main.js.map": "/trumendous-tracks/static/js/main.9c835259.chunk.js.map",
+    "runtime-main.js": "/trumendous-tracks/static/js/runtime-main.5dadc1a9.js",
+    "runtime-main.js.map": "/trumendous-tracks/static/js/runtime-main.5dadc1a9.js.map",
+    "static/css/2.5ce1793d.chunk.css": "/trumendous-tracks/static/css/2.5ce1793d.chunk.css",
+    "static/js/2.0b59970d.chunk.js": "/trumendous-tracks/static/js/2.0b59970d.chunk.js",
+    "static/js/2.0b59970d.chunk.js.map": "/trumendous-tracks/static/js/2.0b59970d.chunk.js.map",
+    "static/js/3.39c71001.chunk.js": "/trumendous-tracks/static/js/3.39c71001.chunk.js",
+    "static/js/3.39c71001.chunk.js.map": "/trumendous-tracks/static/js/3.39c71001.chunk.js.map",
+    "index.html": "/trumendous-tracks/index.html",
+    "static/css/2.5ce1793d.chunk.css.map": "/trumendous-tracks/static/css/2.5ce1793d.chunk.css.map",
+    "static/css/main.96e488e7.chunk.css.map": "/trumendous-tracks/static/css/main.96e488e7.chunk.css.map",
+    "static/js/2.0b59970d.chunk.js.LICENSE.txt": "/trumendous-tracks/static/js/2.0b59970d.chunk.js.LICENSE.txt",
+    "static/media/barGraph.623f29bb.png": "/trumendous-tracks/static/media/barGraph.623f29bb.png",
+    "static/media/collage.049726ee.jpg": "/trumendous-tracks/static/media/collage.049726ee.jpg",
+    "static/media/report.e080a35d.png": "/trumendous-tracks/static/media/report.e080a35d.png",
+    "static/media/scatter.d49d4958.png": "/trumendous-tracks/static/media/scatter.d49d4958.png",
+    "static/media/search-solid.623743d0.svg": "/trumendous-tracks/static/media/search-solid.623743d0.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5dadc1a9.js",
+    "static/css/2.5ce1793d.chunk.css",
+    "static/js/2.0b59970d.chunk.js",
+    "static/css/main.96e488e7.chunk.css",
+    "static/js/main.9c835259.chunk.js"
+  ]
+}
