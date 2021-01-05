@@ -57,3 +57,9 @@ export interface TrackObject {
     name: string
   }
 }
+
+export interface Track {
+  track: {
+    name: string
+  }
+}

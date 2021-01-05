@@ -12,8 +12,8 @@
 }
 
 .titleImage {
-  position: relative;
-  left: -100%;
+  position: absolute;
+  right: 0;
   height: 100%;
   opacity: 30%;
   z-index: -1;

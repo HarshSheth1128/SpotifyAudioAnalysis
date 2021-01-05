@@ -1,9 +1,6 @@
 import React from 'react';
-// import axios from 'axios';
 import "../styles/common.css";
-import codeChallenge from '../codeChallgenge';
 import './Home.css';
-import SpotifyLogo from '../images/spotifyLogo.png';
 import BackgroundImage from '../images/collage.jpg';
 import {Button, Carousel, Typography} from 'antd';
 import Report from '../images/report.png';
@@ -12,16 +9,13 @@ import Scatter from '../images/scatter.png';
 
 function Home(props: any) {
 
-  
-
   const authorize = () => {
-    console.log(codeChallenge);
     let url = 'https://accounts.spotify.com/authorize';
     url += '?response_type=code';
-    url += '&client_id=' + encodeURIComponent('0132ec2527844f11a38d2534ba740119');
+    url += '&client_id=' + encodeURIComponent(process.env.REACT_APP_CLIENT_ID!);
     url += '&code_challenge_method=' + encodeURIComponent('S256');
-    url += '&redirect_uri=' + encodeURIComponent('http://localhost:3000/login');
-    url += '&code_challenge=' + encodeURIComponent(codeChallenge);
+    url += '&redirect_uri=' + encodeURIComponent(process.env.REDIRECT_URI!);
+    url += '&code_challenge=' + encodeURIComponent(process.env.REACT_APP_CODE_CHALLENGE!);
     window.location = url as unknown as Location;
   }
 
@@ -39,20 +33,20 @@ function Home(props: any) {
           </div>
         </div>
         <div className="rightContainer">
-              <Carousel autoplay>
-                <div className="carouselContentDiv">
-                  <Typography.Title level={4}>Generate a playlist report</Typography.Title>
-                  <img width={'80%'} alt="report" className="reportImage" src={Report}/>
-                </div>
-                <div className="carouselContentDiv">
-                <Typography.Title level={4}>Sort the data in a bar graph and find outliers</Typography.Title>
-                  <img width={'80%'} alt="report" className="reportImage" src={BarGraph}/>
-                </div>
-                <div className="carouselContentDiv">
-                <Typography.Title level={4}>Compare the data with other playlists</Typography.Title>
-                  <img width={'80%'} alt="report" className="reportImage" src={Scatter}/>
-                </div>
-              </Carousel>
+          <Carousel autoplay>
+            <div className="carouselContentDiv">
+              <Typography.Title level={4}>Generate a playlist report</Typography.Title>
+              <img width={'700px'} alt="report" className="reportImage" src={Report}/>
+            </div>
+            <div className="carouselContentDiv">
+            <Typography.Title level={4}>Sort the data in a bar graph and find outliers</Typography.Title>
+              <img width={'700px'} alt="report" className="reportImage" src={BarGraph}/>
+            </div>
+            <div className="carouselContentDiv">
+            <Typography.Title level={4}>Compare the data with other playlists</Typography.Title>
+              <img width={'700px'} alt="report" className="reportImage" src={Scatter}/>
+            </div>
+          </Carousel>
         </div>
 
       </div>

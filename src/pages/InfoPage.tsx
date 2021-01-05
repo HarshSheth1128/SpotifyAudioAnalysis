@@ -1,6 +1,5 @@
-import { PageHeader, Typography, Card } from 'antd';
+import { Typography, Card } from 'antd';
 import React from 'react';
-import SideBar from '../components/Sidebar';
 import './InfoPage.css';
 
 function InfoPage() {

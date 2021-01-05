@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
 import axios from "axios";
 import { isEmpty, round, truncate } from "lodash";
-import { Playlist, TrackObject} from "../constants/types";
-
-// TODO handle refresh tokoen.
-// https://medium.com/swlh/handling-access-and-refresh-tokens-using-axios-interceptors-3970b601a5da
+import { GraphData, Playlist, TrackObject, Track, AudioAnalysis} from "../constants/types";
 
 axios.interceptors.response.use(
   res => res,
@@ -25,6 +21,7 @@ axios.interceptors.response.use(
         localStorage.setItem('Authorization', res.data.access_token);
         localStorage.setItem('Refresh', res.data.refresh_token);
       }).then(()=> {
+        localStorage.setItem('isAuth', 'true');
         window.location.reload();
       });
           
@@ -32,47 +29,7 @@ axios.interceptors.response.use(
   }
 )
 
-interface AudioAnalysis {
-  [key:string]: {
-    danceability: number;
-    energy: number;
-    valence: number;
-    tempo: number;
-    loudness: number;
-  }
-}
-
-// interface SpotifyAudioAnalysis {
-//   danceability: number;
-//   energy: number;
-//   valence: number;
-//   tempo: number;
-//   loudness: number;
-// }
-
-interface GraphData {
-  name?: string;
-  danceability?: number;
-  energy?: number;
-  valence?: number;
-  tempo?: number;
-  loudness?: number;
-}
-
-interface Image {
-  height: number,
-  url: string,
-  width: number
-}
-
-interface Track {
-  track: {
-    name: string
-  }
-}
-
 export async function getGraphDataFromId(playlistId: string, cookies: { [name:string]: any}) {
-  // const {Authorization} = cookies;
   const Authorization = localStorage.getItem('Authorization');
   const tracks = await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
     headers: {
@@ -96,18 +53,7 @@ export async function getGraphDataFromId(playlistId: string, cookies: { [name:st
     return audioFeatureObjects;
   });
 
-  return tracks
-    .map((trackObj: {track: {id: string, name:string}}) => {
-      return {
-        name: truncate(trackObj.track.name, {length: 18}),
-        danceability: audioAnalysis[trackObj.track.id].danceability,
-        energy: audioAnalysis[trackObj.track.id].energy,
-        valence: audioAnalysis[trackObj.track.id].valence,
-        tempo: audioAnalysis[trackObj.track.id].tempo,
-        loudness: round((audioAnalysis[trackObj.track.id].loudness + 60) / 60, 3)
-      }
-    });
-
+  return getGraphDataFromRawData(tracks, audioAnalysis);
 }
 
 export function useGetRadarChartDataFromId(playlistId: string, playlistName: string) {
@@ -116,8 +62,6 @@ export function useGetRadarChartDataFromId(playlistId: string, playlistName: str
     {name: 'energy', [playlistName]: 0},
     {name: 'valence', [playlistName]: 0},
   ]);
-  const [cookies] = useCookies(['Authorization']);
-  // const {Authorization} = cookies;
   const Authorization = localStorage.getItem('Authorization');
 
   useEffect(()=> {
@@ -179,8 +123,6 @@ export function useGetPlaylistById(playlistId: string) {
     tracks: {items: []},
     followers: {total: 0}
   });
-  const [cookies] = useCookies(['Authorization']);
-  // const {Authorization} = cookies;
   const Authorization = localStorage.getItem('Authorization');
   useEffect(()=> {
     axios.get(`https://api.spotify.com/v1/playlists/${playlistId}`, {
@@ -197,8 +139,6 @@ export function useGetPlaylistById(playlistId: string) {
 
 export function useGetPlaylists() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  const [cookies] = useCookies(['Authorization']);
-  // const {Authorization} = cookies;
   const Authorization = localStorage.getItem('Authorization');  
   useEffect(()=> {
     axios.get('https://api.spotify.com/v1/me/playlists', {
@@ -218,8 +158,6 @@ export function useGetUserObject() {
     display_name: string,
     images: {url:string}[]
   }>({display_name: 'Harsh', images: []});
-  const [cookies] = useCookies(['Authorization']);
-  // const {Authorization} = cookies;
   const Authorization = localStorage.getItem('Authorization');
   useEffect(() => {
     axios.get('https://api.spotify.com/v1/me', {
@@ -237,8 +175,6 @@ export function useGetUserObject() {
 
 export function useGetTracksForPlaylist(playlistId: string) {
   const [tracks, setTracks] = useState([]);
-  const [cookies] = useCookies(['Authorization']);
-  // const {Authorization} = cookies;
   const Authorization = localStorage.getItem('Authorization');  
   useEffect(() => {
     axios.get(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
@@ -255,8 +191,6 @@ export function useGetTracksForPlaylist(playlistId: string) {
 
 export function useGetAudioFeaturesForTracks(tracks: {track:{id:string}}[]) {
   const [audioAnalysis, setAudioAnalysis] = useState<AudioAnalysis>({});
-  const [cookies] = useCookies(['Authorization']);
-  // const {Authorization} = cookies;
   const Authorization = localStorage.getItem('Authorization');  const trackIds = tracks.map((trackObj: {track: {id:string}})=> trackObj.track.id).join(',');
 
   useEffect(()=> {
@@ -310,9 +244,8 @@ export function useGetGraphDataFromRawData(playlistId: string) {
 
 export function useGetPlaylistCoverImage(playlistId: string) {
   const [playlistCoverImage, setPlaylistCoverImage] = useState<string>('');
-  const [cookies] = useCookies(['Authorization']);
-  // const {Authorization} = cookies;
   const Authorization = localStorage.getItem('Authorization');
+
   useEffect(() => {
     axios.get(`https://api.spotify.com/v1/playlists/${playlistId}/images`, {
       headers: {

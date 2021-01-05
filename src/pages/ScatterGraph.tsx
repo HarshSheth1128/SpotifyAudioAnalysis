@@ -1,15 +1,33 @@
 import { CartesianGrid, Legend, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from "recharts";
-
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { getGraphDataFromId, useGetGraphDataFromRawData, useGetPlaylists } from "../common/api";
-import {Dropdown, Typography, Tooltip as AntTooltip, Tag, Menu, Button, Select, AutoComplete, Input, Checkbox} from "antd";
-import { GraphData, GraphFeatures, Playlist, PlaylistGraphData } from '../constants/types';
-import { DownOutlined, PlusOutlined, RightOutlined, UserOutlined } from "@ant-design/icons";
-import { featureDomains } from '../constants/graphdata';
+import {Dropdown, Typography, Menu, Button, AutoComplete, Input, Checkbox} from "antd";
+import { GraphFeatures, Playlist, PlaylistGraphData } from '../constants/types';
+import { DownOutlined, PlusOutlined} from "@ant-design/icons";
 import './ScatterGraph.css';
-import { filter, find, get, remove, startCase, truncate } from "lodash";
-import searchSolid from '../icons/search-solid.svg';
+import { find, startCase } from "lodash";
 import { useCookies } from "react-cookie";
+import decodeUriComponent from 'decode-uri-component';
+import { AxisDomain } from 'recharts';
+
+const hexFills = [
+  '#1791db',
+  '#84d89d',
+  '#bd84d8',
+  '#d88492',
+  '#d8d284'
+];
+
+const featureDomains: {
+  [key: string]: [AxisDomain, AxisDomain]
+} = {
+  [GraphFeatures.danceability]: [0,1],
+  [GraphFeatures.energy]: [0,1],
+  [GraphFeatures.loudness]: [0, 1],
+  [GraphFeatures.valence]: [0, 1],  
+  [GraphFeatures.tempo]: [0, 250]
+}
+
 
 function ScatterGraph() {
   const [cookies] = useCookies(['Authorization']);
@@ -17,22 +35,9 @@ function ScatterGraph() {
   const playlistId = search.match(/playlistId=(.*)/)![1];
   const playlistName = search.match(/playlistName=(.*)&/)![1];
   const [features, setFeatures] = useState({X: GraphFeatures.danceability, Y: GraphFeatures.energy, Z: GraphFeatures.loudness});
-
-  const hexFills = [
-    '#1791db',
-    '#84d89d',
-    '#bd84d8',
-    '#d88492',
-    '#d8d284'
-  ];
-
-  // Get the graph data from raw data
-  const [graphData, setGraphData] = useGetGraphDataFromRawData(playlistId);
-
+  const [graphData] = useGetGraphDataFromRawData(playlistId);
   const [playlists] = useGetPlaylists();
   const [selectedPlaylists, setSelectedPlaylists] = useState<PlaylistGraphData[]>([]);
-
-  const [extraGraphData, setExtraGraphData] = useState<GraphData[][]>([]);
 
   const getDropdownPlaylists = () => {
     return playlists.map((res: Playlist)=> {return {'value': res.name}})
@@ -41,6 +46,7 @@ function ScatterGraph() {
   const handleMenuClick = (e: any, side:string) => {
     setFeatures({...features, [side]: e.key})
   }
+
   const FeatureMenu = (side: string) => (
     <Menu onClick={(e) => handleMenuClick(e, side)}>
       <Menu.Item key={GraphFeatures.danceability}>
@@ -61,16 +67,13 @@ function ScatterGraph() {
     </Menu>
   );
 
-  console.log(selectedPlaylists);
-
-  const onSubmit = (evt: any) => {
+  const searchBarSubmit = (evt: any) => {
     evt.preventDefault();
     const selectedPlaylistName = evt.target[0].value;
     const playlist = find(playlists, (playlist: {name: string, id: string}) => {return playlist.name === selectedPlaylistName});
     getGraphDataFromId(playlist!.id, cookies).then((res)=> {
       setSelectedPlaylists([...selectedPlaylists, {playlist: playlist!, graphData: res, visible: true}]);
     });
-    
   }
 
   const removePlaylist = (playlistId: string) => {
@@ -80,16 +83,15 @@ function ScatterGraph() {
       }
     }
     setSelectedPlaylists([...selectedPlaylists]);
-  }
-
-  
+  } 
 
   return (
     <div className="pageRoot">
+      {/* Search bar that disappears after 5 items have been selected */}
       {selectedPlaylists.length < 5 && <div className="settingsContainer">
         <div className="formContainer">
           Add more playlists to compare
-          <form className="searchForm" onSubmit={onSubmit}>
+          <form className="searchForm" onSubmit={searchBarSubmit}>
 
             <Input.Group className="searchInput">
               <AutoComplete
@@ -103,6 +105,8 @@ function ScatterGraph() {
           </form>
         </div>
       </div>}
+
+      {/* Graph */}
       <div className="graphContainer">
         <div className="container">
           <div className="xAxisFeature">{startCase(features.X)}</div>
@@ -115,7 +119,7 @@ function ScatterGraph() {
               <Tooltip cursor={{ strokeDasharray: '3 3' }} />
               <Legend />
               <CartesianGrid strokeDasharray="5 5" />
-              <Scatter name={playlistName} data={graphData} fill="#8884d8" />
+              <Scatter name={decodeUriComponent(playlistName)} data={graphData} fill="#8884d8" />
               {selectedPlaylists.map((playlistGraphData, index)=> (
                 (playlistGraphData.visible && 
                 <Scatter 
@@ -143,6 +147,8 @@ function ScatterGraph() {
           </div>
           </div>
       </div>
+
+      {/* Holds the controller for the scatter chart */}
       <div className="settingsContainer">
         <div className="dropdownLabelContainer">
           <Typography.Text>X-Axis Feature</Typography.Text>

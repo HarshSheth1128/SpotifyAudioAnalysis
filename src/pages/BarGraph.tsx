@@ -1,15 +1,10 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import { BarChart, Legend, CartesianGrid, XAxis, YAxis, Tooltip, Bar} from 'recharts';
-import "./BarGraph.css";
-import {isEmpty, round, truncate} from 'lodash';
 import CustomizedAxisTick from '../components/CustomizedTick';
 import { Typography, Checkbox, Radio, Pagination} from 'antd';
-import { isConstructorDeclaration } from 'typescript';
-import { useGetAudioFeaturesForTracks, useGetGraphDataFromRawData, useGetTracksForPlaylist } from '../common/api';
+import { useGetGraphDataFromRawData } from '../common/api';
 import { GraphData } from '../constants/types';
-import decodeUriComponent from 'decode-uri-component';
-
-
+import "./BarGraph.css";
 
 enum RadioSortByOptions {
   none = 'none',
@@ -25,12 +20,9 @@ enum SortOrder {
   descending = 'descending',
 }
 
-
-
 export function BarGraph() {
   const search = window.location.search;
   const playlistId = search.match(/playlistId=(.*)/)![1];
-  const playlistName = decodeUriComponent(search.match(/playlistName=(.*)&/)![1]);
   const [activeFeatures, setActiveFeatures] = useState({
     danceability: true,
     energy: false,
@@ -47,16 +39,13 @@ export function BarGraph() {
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.descending);
 
   const sortData = useCallback((graphData: GraphData[]): GraphData[] => {
-    // console.log(sortBy);
     if (sortBy === RadioSortByOptions.none) return graphData;
-    console.log(sortBy);
 
     if (sortOrder === SortOrder.descending) {
       return graphData.sort((a, b) => a[sortBy]! - b[sortBy]!);
     } else {
       return graphData.sort((a, b) => b[sortBy]! - a[sortBy]!);
     }
-    
     
   }, [sortBy, sortOrder]);
 
@@ -135,8 +124,6 @@ export function BarGraph() {
       
     </div>
   );
-
- 
 
  function toggleFeature(feature: "danceability" | "energy" | "valence" | "tempo" | "loudness") {
   setActiveFeatures({...activeFeatures, [feature]: !activeFeatures[feature]})

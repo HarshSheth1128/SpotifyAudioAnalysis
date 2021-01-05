@@ -1,24 +1,17 @@
 import React, {useState} from 'react';
 import './Sidebar.css';
-import arrowRight from '../icons/arrow-right-solid.svg';
-import arrowLeft from '../icons/arrow-left-solid.svg';
-import searchSolid from '../icons/search-solid.svg';
 import { Typography, Button, Menu } from 'antd';
 import {
   SearchOutlined,
-  CaretRightOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   BarChartOutlined,
   PaperClipOutlined,
-  GiftOutlined,
   UserOutlined,
   DotChartOutlined,
   InfoCircleOutlined
 } from '@ant-design/icons';
-import SubMenu from 'antd/lib/menu/SubMenu';
 import { useHistory } from 'react-router-dom';
-import { toInteger } from 'lodash';
 import { useGetUserObject } from '../common/api';
 import {ContentTypes} from '../constants/types';
 

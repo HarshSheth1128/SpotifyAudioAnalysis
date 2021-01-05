@@ -1,29 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
+import React from 'react';
 import './Search.css';
 import searchSolid from '../icons/search-solid.svg';
-import {Input, AutoComplete, Button, Typography, Tag} from 'antd';
-import { getPlaylists } from '../api';
+import {Input, AutoComplete, Button, Typography} from 'antd';
 import {find} from 'lodash';
-import {useAuth} from '../context/auth';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Playlist } from '../constants/types';
-
-// Change this to use history
-
-
+import { useGetPlaylists } from '../common/api';
 
 function Application(props: any) { 
-  const [cookies] = useCookies(['Authorization']);
-  const [playlists, setPlaylists] = useState([]);
-  const [selectedPlaylist, setSelectedPlaylist] = useState({name: '', id: ''});
+  const [playlists] = useGetPlaylists();
+  const history = useHistory();
   const searchInputTest = 'Search Here';
-
-  useEffect(() => { 
-    getPlaylists(cookies).then((res)=> {
-      setPlaylists(res.data.items);
-    });
-  }, [cookies]);
 
   const getDropdownPlaylists = () => {
     return playlists.map((res: Playlist)=> {return {'value': res.name}})
@@ -32,18 +19,15 @@ function Application(props: any) {
   const onSubmit = (evt: any) => {
     evt.preventDefault();
     const selectedPlaylistName = evt.target[0].value;
-    const playlist = find(playlists, (playlist: {name:string, id:string})=>{ return playlist.name === selectedPlaylistName});
-    setSelectedPlaylist(playlist!);
-  }
-
-  if (selectedPlaylist.id !== '') {
-    return <Redirect to={`/app/playlist/report?playlistName=${selectedPlaylist.name}&playlistId=${selectedPlaylist!.id}`}/>
+    const playlist = find(playlists, (playlist: {name:string, id:string})=>{ return playlist.name === selectedPlaylistName})!;
+    return history.push(`/app/playlist/report?playlistName=${playlist.name}&playlistId=${playlist.id}`);
   }
 
   return (
     
     <div className="background">
       <div className="pageContainer">
+
         <Typography.Title>Search for a playlist to get started</Typography.Title>
         <div className="searchBox">
           <form className="searchForm" onSubmit={onSubmit}>
@@ -55,7 +39,6 @@ function Application(props: any) {
                 />
               </Input.Group>
               <Button htmlType="submit"><img className="searchIcon" alt="searchIcon" src={searchSolid}></img></Button>
-
 
           </form>
         </div>
