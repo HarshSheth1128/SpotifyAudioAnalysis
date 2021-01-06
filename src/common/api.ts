@@ -157,7 +157,7 @@ export function useGetUserObject() {
   const [userObject, setUserObject] = useState<{
     display_name: string,
     images: {url:string}[]
-  }>({display_name: 'Harsh', images: []});
+  }>({display_name: 'User', images: []});
   const Authorization = localStorage.getItem('Authorization');
   useEffect(() => {
     axios.get('https://api.spotify.com/v1/me', {
