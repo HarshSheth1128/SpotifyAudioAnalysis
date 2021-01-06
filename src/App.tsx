@@ -28,7 +28,7 @@ function App() {
   }
 
   useEffect(()=> {
-    if (code !== '') {
+    if (code !== '' && !isAuth) {
       const params = new URLSearchParams();
       params.append('client_id', process.env.REACT_APP_CLIENT_ID!);
       params.append('grant_type', 'authorization_code');
