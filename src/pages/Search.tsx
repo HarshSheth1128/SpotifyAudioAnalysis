@@ -12,6 +12,8 @@ function Application(props: any) {
   const history = useHistory();
   const searchInputTest = 'Search Here';
 
+  console.log('hello');
+
   const getDropdownPlaylists = () => {
     return playlists.map((res: Playlist)=> {return {'value': res.name}})
   }

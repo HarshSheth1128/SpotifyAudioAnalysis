@@ -31,7 +31,7 @@ const featureDomains: {
 
 function ScatterGraph() {
   const [cookies] = useCookies(['Authorization']);
-  const search = window.location.search;
+  const search = window.location.hash;
   const playlistId = search.match(/playlistId=(.*)/)![1];
   const playlistName = search.match(/playlistName=(.*)&/)![1];
   const [features, setFeatures] = useState({X: GraphFeatures.danceability, Y: GraphFeatures.energy, Z: GraphFeatures.loudness});

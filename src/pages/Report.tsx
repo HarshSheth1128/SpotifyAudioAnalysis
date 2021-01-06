@@ -9,7 +9,7 @@ import { TrackObject } from '../constants/types';
 import decodeUriComponent from 'decode-uri-component';
 
 function Report() {
-  const search = window.location.search;
+  const search = window.location.hash;
   const playlistId = search.match(/playlistId=(.*)/)![1];
   const playlistName = search.match(/playlistName=(.*)&/)![1];
   const [playlistCoverImage] = useGetPlaylistCoverImage(playlistId);

@@ -21,7 +21,7 @@ enum SortOrder {
 }
 
 export function BarGraph() {
-  const search = window.location.search;
+  const search = window.location.hash;
   const playlistId = search.match(/playlistId=(.*)/)![1];
   const [activeFeatures, setActiveFeatures] = useState({
     danceability: true,

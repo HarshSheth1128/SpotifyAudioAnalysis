@@ -14,7 +14,7 @@ function Home(props: any) {
     url += '?response_type=code';
     url += '&client_id=' + encodeURIComponent(process.env.REACT_APP_CLIENT_ID!);
     url += '&code_challenge_method=' + encodeURIComponent('S256');
-    url += '&redirect_uri=' + encodeURIComponent(process.env.REDIRECT_URI!);
+    url += '&redirect_uri=' + encodeURIComponent(process.env.REACT_APP_REDIRECT_URI!);
     url += '&code_challenge=' + encodeURIComponent(process.env.REACT_APP_CODE_CHALLENGE!);
     window.location = url as unknown as Location;
   }

@@ -38,7 +38,7 @@ function Sidebar({contentType, setContentType}: {
 
   const handleMenuClick = (item: React.Key) => {
     const changedItem = item as ContentTypes;
-    const search = window.location.search;
+    const search = window.location.hash;
     setContentType(changedItem);
     if (changedItem === ContentTypes.Search) {
       return history.push(`/app/search`)

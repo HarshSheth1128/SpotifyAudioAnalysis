@@ -13,7 +13,7 @@ import decodeUriComponent from 'decode-uri-component';
 
 function Playlist() {
   const [contentType, setContentType] = useState(ContentTypes.None);
-  const search = window.location.search;
+  const search = window.location.hash;
   const playlistName = decodeUriComponent(search.match(/playlistName=(.*)&/)![1]);
   const pathName = useLocation().pathname;
 

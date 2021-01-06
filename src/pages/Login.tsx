@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {useAuth} from '../context/auth';
+import { useAuth } from '../context/auth';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -17,7 +17,7 @@ function Login() {
       params.append('client_id', process.env.REACT_APP_CLIENT_ID!);
       params.append('grant_type', 'authorization_code');
       params.append('code', code);
-      params.append('redirect_uri', process.env.REDIRECT_URI!);
+      params.append('redirect_uri', process.env.REACT_APP_REDIRECT_URI!);
       params.append('code_verifier', process.env.REACT_APP_CODE_VERIFIER!);
 
       axios.post('https://accounts.spotify.com/api/token', params, { headers: {
@@ -33,7 +33,7 @@ function Login() {
     }
   }, [code, isAuth, setCookie, setIsAuth, history])
 
-  const search = window.location.search;
+  const search = window.location.hash;
   let index;
 
   if (search.includes('error')){
